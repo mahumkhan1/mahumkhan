@@ -1,316 +1,927 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mahum Khan — CS + Astrophysics, UC Berkeley">
+  <title>Mahum Khan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <head>
+    :root {
+      --navy:      #0d0d14;
+      --navy-mid:  #12121e;
+      --navy-card: rgba(26,26,46,0.45);
+      --gold:      #c9b97a;
+      --gold-dim:  #a99860;
+      --cream:     #e8dfc4;
+      --cream-dim: #b8af94;
+      --sidebar-w: 220px;
+    }
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    html { scroll-behavior: smooth; }
 
-    <title>Mahum Khan</title>
+    body {
+      background: var(--navy);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
 
-    <!-- Custom fonts for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="vendor/devicons/css/devicons.min.css" rel="stylesheet">
-    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--cream); }
 
-    <!-- Custom styles for this template -->
-    <link href="css/resume.min.css" rel="stylesheet">
+    /* ── Starfield ── */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-  </head>
+    /* ── Sidebar ── */
+    #sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--navy-mid);
+      border-right: 1px solid rgba(201,185,122,0.12);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0 1.5rem;
+    }
 
-  <body id="page-top">
+    #sidebar-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 0 1rem;
+      margin-bottom: 0.2rem;
+    }
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#education">Education</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#experience">Experience</a>
-          </li>
-		            <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#projects">My Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#outreach">Outreach</a>
-          </li>
-          <!--li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#awards">Awards</a>
-          </li-->
-        </ul>
+    #sidebar-sub {
+      font-size: 0.63rem;
+      color: var(--gold-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    #moon-canvas {
+      display: block;
+      margin: 0 auto 0.8rem;
+    }
+
+    #phase-dots {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 1.2rem;
+    }
+
+    .phase-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    #sidebar-nav { list-style: none; width: 100%; flex: 1; }
+
+    #sidebar-nav li a {
+      display: block;
+      padding: 0.42rem 1.4rem;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      border-left: 2px solid transparent;
+      transition: color 0.25s, padding-left 0.25s, border-color 0.25s;
+    }
+
+    #sidebar-nav li a:hover,
+    #sidebar-nav li a.active {
+      color: var(--gold);
+      padding-left: 2rem;
+      border-left-color: var(--gold);
+    }
+
+    #sidebar-socials {
+      display: flex;
+      gap: 1.1rem;
+      padding-top: 1rem;
+    }
+
+    #sidebar-socials a {
+      color: var(--cream-dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+    #sidebar-socials a:hover { color: var(--gold); transform: translateY(-2px); }
+
+    .icon-svg { width: 17px; height: 17px; fill: currentColor; vertical-align: middle; }
+
+    /* ── Main ── */
+    #main { margin-left: var(--sidebar-w); position: relative; z-index: 1; }
+
+    /* ── Sections ── */
+    .section {
+      min-height: 100vh;
+      padding: 5rem 4rem 4rem;
+      border-bottom: 1px solid rgba(201,185,122,0.07);
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .section.visible { opacity: 1; transform: none; }
+    #about { opacity: 1; transform: none; }
+
+    .section-title {
+      font-size: 2.75rem;
+      color: var(--cream);
+      margin-bottom: 2.5rem;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 44px; height: 1px;
+      background: var(--gold);
+      margin-top: 0.45rem;
+    }
+
+    /* ── Hero ── */
+    #about {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-name {
+      font-size: 4.4rem;
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+    }
+    .hero-name span { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-bio {
+      max-width: 540px;
+      color: var(--cream-dim);
+      margin-bottom: 2.2rem;
+      font-size: 0.97rem;
+    }
+
+    .moon-phases-strip {
+      display: flex;
+      gap: 1.3rem;
+      align-items: flex-end;
+      margin-bottom: 2.2rem;
+      flex-wrap: wrap;
+    }
+
+    .moon-phase-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .moon-phase-icon span {
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+    }
+
+    .hero-socials { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .hero-socials a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      border: 1px solid rgba(201,185,122,0.28);
+      padding: 0.38rem 0.85rem;
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+    .hero-socials a:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(201,185,122,0.06);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--navy-card);
+      border: 1px solid rgba(201,185,122,0.08);
+      border-left: 3px solid rgba(201,185,122,0.15);
+      border-radius: 4px;
+      padding: 1.4rem 1.65rem;
+      margin-bottom: 1.4rem;
+      transition: border-left-color 0.35s, background 0.3s, transform 0.25s;
+    }
+    .card:hover {
+      border-left-color: var(--gold);
+      background: rgba(26,26,46,0.72);
+      transform: translateX(4px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-title { font-size: 1.25rem; color: var(--cream); }
+    .card-title a { color: var(--cream); }
+    .card-title a:hover { color: var(--gold); }
+
+    .card-date {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--gold-dim);
+      white-space: nowrap;
+      padding-top: 0.2rem;
+    }
+
+    .card-sub {
+      font-size: 0.78rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.7rem;
+    }
+    .card-sub a { color: var(--gold); }
+    .card-sub a:hover { color: var(--cream); }
+
+    .card ul {
+      padding-left: 1.15rem;
+      color: var(--cream-dim);
+      font-size: 0.91rem;
+    }
+    .card ul li { margin-bottom: 0.28rem; }
+    .card p { color: var(--cream-dim); font-size: 0.91rem; }
+
+    /* ── Course pills ── */
+    .course-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.18rem 0.6rem;
+      border: 1px solid rgba(201,185,122,0.32);
+      border-radius: 20px;
+      font-size: 0.71rem;
+      letter-spacing: 0.06em;
+      color: var(--gold-dim);
+      transition: all 0.2s;
+    }
+    .pill:hover {
+      border-color: var(--gold);
+      color: var(--cream);
+      background: rgba(201,185,122,0.08);
+    }
+
+    /* ── Skills ── */
+    .skills-label {
+      font-size: 0.76rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.9rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.7rem 0.5rem;
+      border: 1px solid rgba(201,185,122,0.1);
+      border-radius: 4px;
+      font-size: 0.76rem;
+      color: var(--cream-dim);
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .skill-item:hover {
+      border-color: rgba(201,185,122,0.38);
+      color: var(--cream);
+      background: rgba(201,185,122,0.05);
+    }
+    .skill-icon { font-size: 1.35rem; }
+
+    .workflow-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 0.45rem;
+    }
+    .workflow-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--cream-dim);
+      font-size: 0.89rem;
+    }
+    .workflow-list li::before {
+      content: '◆';
+      color: var(--gold);
+      font-size: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Moon widget ── */
+    #moon-widget {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      cursor: default;
+    }
+
+    #moon-widget-inner {
+      background: rgba(18,18,30,0.92);
+      border: 1px solid rgba(201,185,122,0.28);
+      border-radius: 50px;
+      padding: 0.45rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.76rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.05em;
+      backdrop-filter: blur(10px);
+      transition: all 0.25s;
+    }
+    #moon-widget:hover #moon-widget-inner {
+      border-color: var(--gold);
+      color: var(--cream);
+    }
+
+    #moon-widget-tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      right: 0;
+      background: rgba(18,18,30,0.97);
+      border: 1px solid rgba(201,185,122,0.28);
+      border-radius: 6px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.74rem;
+      color: var(--cream);
+      white-space: nowrap;
+      line-height: 1.6;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s;
+      letter-spacing: 0.04em;
+      backdrop-filter: blur(10px);
+    }
+    #moon-widget:hover #moon-widget-tooltip { opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid rgba(201,185,122,0.12);
+      }
+      #main { margin-left: 0; }
+      .section { padding: 3rem 1.5rem 2rem; }
+      .hero-name { font-size: 2.8rem; }
+      #moon-canvas, #phase-dots { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<nav id="sidebar">
+  <div id="sidebar-name">Mahum Khan</div>
+  <div id="sidebar-sub">CS · Astrophysics · Berkeley</div>
+  <canvas id="moon-canvas" width="64" height="64"></canvas>
+  <div id="phase-dots"></div>
+  <ul id="sidebar-nav">
+    <li><a href="#about"      class="nav-link active">About</a></li>
+    <li><a href="#education"  class="nav-link">Education</a></li>
+    <li><a href="#experience" class="nav-link">Experience</a></li>
+    <li><a href="#projects"   class="nav-link">Projects</a></li>
+    <li><a href="#skills"     class="nav-link">Skills</a></li>
+    <li><a href="#outreach"   class="nav-link">Outreach</a></li>
+  </ul>
+  <div id="sidebar-socials">
+    <a href="https://www.linkedin.com/in/mahum-khan-7618191b5" target="_blank" aria-label="LinkedIn">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/mahumkhan1" target="_blank" aria-label="GitHub">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="hero-name">Mahum <span>Khan</span></div>
+    <div class="hero-sub">Berkeley, CA &nbsp;·&nbsp; CS + Astrophysics &nbsp;·&nbsp; mahumkhan@berkeley.edu</div>
+    <p class="hero-bio">
+      Software engineer and researcher with a background in embedded systems, data science, and astrophysics. Passionate about building elegant systems at the intersection of technology and science.
+    </p>
+    <div class="moon-phases-strip" id="moon-phases-strip"></div>
+    <div class="hero-socials">
+      <a href="https://www.linkedin.com/in/mahum-khan-7618191b5" target="_blank">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/mahumkhan1" target="_blank">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section" id="education">
+    <h2 class="section-title">Education</h2>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://www.berkeley.edu" target="_blank" rel="noopener">University of California, Berkeley</a>
+        </div>
+        <div class="card-date">Aug 2021 – May 2025</div>
       </div>
-    </nav>
-
-    <div class="container-fluid p-0">
-
-      <section class="resume-section p-3 p-lg-5 d-flex d-column" id="about">
-        <div class="my-auto">
-          <h1 class="mb-0">Mahum
-            <span class="text-primary">Khan</span>
-          </h1>
-          <div class="subheading mb-5">Berkeley, California · (949) 681-8372 ·
-            <a href="mailto:mahumkhan@berkeley.edu">mahumkhan@berkeley.edu</a>
-          </div>
-          <p class="mb-5" >
-			Ambitious and self-motivated individual with a sophisticated background in coding and seeking opportunities to expand endeavor within software development. 
-		  </p>
-          <ul class="list-inline list-social-icons mb-0">
-            <li class="list-inline-item">
-              <a href="https://www.linkedin.com/in/mahum-khan-7618191b5" target="_blank"> 
-                <span class="fa-stack fa-lg">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="https://github.com/mahumkhan1" target="_blank">
-                <span class="fa-stack fa-lg">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-      
-      <!-- Education -->
-      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
-        <div class="my-auto">
-          <h2 class="mb-5">Education</h2>
-
-          <div class="resume-item d-flex flex-column flex-md-row">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://www.berkeley.edu" target="_blank" rel="noopener">University of California, Berkeley</a></h3>
-              <div>B.A. Computer Science, B.A. Astrophysics</div>
-              <p class="mt-2">
-                Relevant Coursework:
-                <a href="https://cs170.org/" target="_blank" rel="noopener">Algorithms</a>, 
-                <a href="https://inst.eecs.berkeley.edu/~cs61b/" target="_blank" rel="noopener">Data Structures</a>,
-                <a href="https://cs61c.org/" target="_blank" rel="noopener">Machine Structures</a>, 
-                <a href="https://ds100.org" target="_blank" rel="noopener">ML & Data Science</a>,
-                <a href="https://cs184.eecs.berkeley.edu/" target="_blank" rel="noopener">Computer Graphics</a>, 
-                <a href="https://cs186berkeley.net/" target="_blank" rel="noopener">Database Systems</a>, 
-                <a href="https://cs280.computer-vision.org/" target="_blank" rel="noopener">Computer Vision</a>, 
-                <a href="https://www.ischool.berkeley.edu/courses/info/213" target="_blank" rel="noopener">UI Design & Development</a>
-              </p>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">Aug 2021 – May 2025</span></div>
-          </div>
-        </div>
-      </section>
-	  
-	    <!-- Experience -->
-      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
-        <div class="my-auto">
-          <h2 class="mb-5">Experience</h2>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0">Embedded Systems Engineer</h3>
-              <div class="subheading mb-2">
-                <a href="https://movandi.com/" target="_blank" rel="noopener">Movandi</a> · Irvine, CA
-              </div>
-              <ul>
-                <li>Designed and implemented embedded systems software and firmware for RFIC chips, ensuring functionality and performance.</li>
-                <li>Conducted integration testing and debugging to validate system performance and usability under real-world conditions.</li>
-                <li>Collaborated cross-functionally to optimize system architecture for scalability and reliability.</li>
-              </ul>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">May 2024 – Present</span></div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0">Research Assistant</h3>
-              <div class="subheading mb-2">
-                <a href="https://www.ssl.berkeley.edu/nasa-selects-gamma-ray-telescope-to-chart-milky-way-evolution/" target="_blank" rel="noopener">Space Sciences Laboratory</a> · Berkeley, CA
-              </div>
-              <ul>
-                <li>Automated data pipelines in Python to process and analyze datasets from NASA’s COSI gamma ray telescope.</li>
-                <li>Applied ML models for data classification, visualization, and pattern recognition in astrophysics research.</li>
-                <li>Utilized high-performance computing environments for large-scale data processing and storage management.</li>
-              </ul>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">Sep 2022 – May 2024</span></div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0">Instructor</h3>
-              <div class="subheading mb-2">
-                <a href="https://www.coderevkids.com" target="_blank" rel="noopener">CodeREV</a> · Newport Beach, CA
-              </div>
-              <ul>
-                <li>Instructed 100+ students across 8 weeks in robotics, block-based programming, Roblox Studio, and physics.</li>
-                <li>Guided 40+ students to use Arduino IDE to implement robot obstacle detection and movement controls.</li>
-              </ul>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">Jun 2023 – Aug 2023</span></div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0">Python Instructor</h3>
-              <div class="subheading mb-2">
-                <a href="https://pythondecal.github.io/curriculum.html" target="_blank" rel="noopener">Python for Astronomers DeCal</a> · UC Berkeley
-              </div>
-              <ul>
-                <li>Designed a course for 500+ students to develop coding skills for research & upper-division astrophysics coursework.</li>
-                <li>Collaborated with the department to align curriculum with upper-division astro/physics courses.</li>
-                <li>Implemented interactive Jupyter Notebook lectures and demos, increasing student engagement and enrollment.</li>
-              </ul>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">Jan 2022 – May 2025</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Projects -->
-      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="projects">
-        <div class="my-auto">
-          <h2 class="mb-5">Projects</h2>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://beckyfeng08.github.io/subpages/cs184/finalproject/finalprojectpage.html" target="_blank" rel="noopener">Interactive Mesh Painter</a></h3>
-              <div class="subheading mb-2">JavaScript · Three.js · WebGL</div>
-              <p>Developed an interactive interface for painting texture maps on 3D meshes or UV coordinates; implemented WebGL viewer with mesh/texture loading and raycasting.</p>
-            </div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://stac.studentorg.berkeley.edu/project/rover" target="_blank" rel="noopener">AI Rover</a></h3>
-              <div class="subheading mb-2">Python</div>
-              <p>Implemented a computer vision pipeline for object recognition and resource collection; built a resource identification and collection system.</p>
-            </div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://tinyurl.com/sarturnsmoonanimation" target="_blank" rel="noopener">Animation of Saturn’s Moons</a></h3>
-              <div class="subheading mb-2">Python · NumPy</div>
-              <p>Processed Leuschner Telescope data and applied Keplerian orbit models to generate interpretable visualizations.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="skills">
-        <div class="my-auto">
-          <h2 class="mb-5">Skills</h2>
-
-          <div class="subheading mb-3">Programming Languages &amp; Tools</div>
-          <ul class="list-inline list-icons">
-            <li class="list-inline-item">
-              <i class="devicons devicons-html5"></i>
-            </li>
-            <li class="list-inline-item">
-              <i class="devicons devicons-css3"></i>
-            </li>
-            <li class="list-inline-item">
-              <i class="devicons devicons-javascript"></i>
-            </li>
-            <li class="list-inline-item">
-              <i class="devicons devicons-python"></i>
-            </li>
-            <li class="list-inline-item">
-              <i class="devicons devicons-git"></i>
-            </li>
-          </ul>
-
-          <div class="subheading mb-3">Workflow</div>
-          <ul class="fa-ul mb-0">
-            <li>
-              <i class="fa-li fa fa-check"></i>
-              Building Accessible & User-Centered Designs
-            </li>
-            <li>
-              <i class="fa-li fa fa-check"></i>
-              Rapid Prototyping & Iterative Development
-            </li>
-            <li>
-              <i class="fa-li fa fa-check"></i>
-              Debugging & Performance Optimization
-            </li>
-            <li>
-              <i class="fa-li fa fa-check"></i>
-              Collaborative Teamwork & Project Management
-            </li>
-            <li>
-              <i class="fa-li fa fa-check"></i>
-              Research-Driven Problem Solving
-            </li>
-          </ul>
-        </div>
-      </section>
-
-
-      <!-- Outreach -->
-      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="outreach">
-        <div class="my-auto">
-          <h2 class="mb-5">Outreach</h2>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://uas.astro.berkeley.edu/" target="_blank" rel="noopener">Undergraduate Astronomy Society</a></h3>
-              <div class="subheading mb-2">President · Berkeley, CA</div>
-              <p>Increased community engagement by 400+ members; coordinated star parties, sidewalk astronomy, and career workshops with 100+ attendees.</p>
-            </div>
-            <div class="resume-date text-md-right"><span class="text-primary">June 2023 – May 2025</span></div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row mb-4">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://asktutoring.org/" target="_blank" rel="noopener">ASK Tutoring</a></h3>
-              <p>Volunteer-based nonprofit offering tutoring to underprivileged communities; supported weekly sessions for students and tutors.</p>
-            </div>
-          </div>
-
-          <div class="resume-item d-flex flex-column flex-md-row">
-            <div class="resume-content mr-auto">
-              <h3 class="mb-0"><a href="https://projectdowntown.org/" target="_blank" rel="noopener">Project Downtown</a></h3>
-              <p>Organized and participated in weekly food preparation and distribution for underserved communities.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="card-sub">B.A. Computer Science &nbsp;·&nbsp; B.A. Astrophysics</div>
+      <p>Relevant Coursework:</p>
+      <div class="course-pills">
+        <a class="pill" href="https://cs170.org/" target="_blank" rel="noopener">Algorithms</a>
+        <a class="pill" href="https://inst.eecs.berkeley.edu/~cs61b/" target="_blank" rel="noopener">Data Structures</a>
+        <a class="pill" href="https://cs61c.org/" target="_blank" rel="noopener">Machine Structures</a>
+        <a class="pill" href="https://ds100.org" target="_blank" rel="noopener">ML &amp; Data Science</a>
+        <a class="pill" href="https://cs184.eecs.berkeley.edu/" target="_blank" rel="noopener">Computer Graphics</a>
+        <a class="pill" href="https://cs186berkeley.net/" target="_blank" rel="noopener">Database Systems</a>
+        <a class="pill" href="https://cs280.computer-vision.org/" target="_blank" rel="noopener">Computer Vision</a>
+        <a class="pill" href="https://www.ischool.berkeley.edu/courses/info/213" target="_blank" rel="noopener">UI Design &amp; Dev</a>
+      </div>
     </div>
-      </section>
+  </section>
 
+  <!-- Experience -->
+  <section class="section" id="experience">
+    <h2 class="section-title">Experience</h2>
 
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Embedded Systems Engineer</div>
+        <div class="card-date">May 2024 – Present</div>
+      </div>
+      <div class="card-sub"><a href="https://movandi.com/" target="_blank" rel="noopener">Movandi</a> · Irvine, CA</div>
+      <ul>
+        <li>Designed and implemented embedded systems software and firmware for RFIC chips, ensuring functionality and performance.</li>
+        <li>Conducted integration testing and debugging to validate system performance and usability under real-world conditions.</li>
+        <li>Collaborated cross-functionally to optimize system architecture for scalability and reliability.</li>
+      </ul>
     </div>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Research Assistant</div>
+        <div class="card-date">Sep 2022 – May 2024</div>
+      </div>
+      <div class="card-sub"><a href="https://www.ssl.berkeley.edu/nasa-selects-gamma-ray-telescope-to-chart-milky-way-evolution/" target="_blank" rel="noopener">Space Sciences Laboratory</a> · Berkeley, CA</div>
+      <ul>
+        <li>Automated data pipelines in Python to process and analyze datasets from NASA's COSI gamma ray telescope.</li>
+        <li>Applied ML models for data classification, visualization, and pattern recognition in astrophysics research.</li>
+        <li>Utilized high-performance computing environments for large-scale data processing and storage management.</li>
+      </ul>
+    </div>
 
-    <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Instructor</div>
+        <div class="card-date">Jun 2023 – Aug 2023</div>
+      </div>
+      <div class="card-sub"><a href="https://www.coderevkids.com" target="_blank" rel="noopener">CodeREV</a> · Newport Beach, CA</div>
+      <ul>
+        <li>Instructed 100+ students across 8 weeks in robotics, block-based programming, Roblox Studio, and physics.</li>
+        <li>Guided 40+ students to use Arduino IDE to implement robot obstacle detection and movement controls.</li>
+      </ul>
+    </div>
 
-    <!-- Custom scripts for this template -->
-    <script src="js/resume.min.js"></script>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Python Instructor</div>
+        <div class="card-date">Jan 2022 – May 2025</div>
+      </div>
+      <div class="card-sub"><a href="https://pythondecal.github.io/curriculum.html" target="_blank" rel="noopener">Python for Astronomers DeCal</a> · UC Berkeley</div>
+      <ul>
+        <li>Designed a course for 500+ students to develop coding skills for research &amp; upper-division astrophysics coursework.</li>
+        <li>Collaborated with the department to align curriculum with upper-division astro/physics courses.</li>
+        <li>Implemented interactive Jupyter Notebook lectures and demos, increasing student engagement and enrollment.</li>
+      </ul>
+    </div>
+  </section>
 
-  </body>
+  <!-- Projects -->
+  <section class="section" id="projects">
+    <h2 class="section-title">Projects</h2>
 
+    <div class="card">
+      <div class="card-title">
+        <a href="https://beckyfeng08.github.io/subpages/cs184/finalproject/finalprojectpage.html" target="_blank" rel="noopener">Interactive Mesh Painter</a>
+      </div>
+      <div class="card-sub">JavaScript · Three.js · WebGL</div>
+      <p>Developed an interactive interface for painting texture maps on 3D meshes or UV coordinates; implemented WebGL viewer with mesh/texture loading and raycasting.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <a href="https://stac.studentorg.berkeley.edu/project/rover" target="_blank" rel="noopener">AI Rover</a>
+      </div>
+      <div class="card-sub">Python</div>
+      <p>Implemented a computer vision pipeline for object recognition and resource collection; built a resource identification and collection system.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <a href="https://tinyurl.com/sarturnsmoonanimation" target="_blank" rel="noopener">Animation of Saturn's Moons</a>
+      </div>
+      <div class="card-sub">Python · NumPy</div>
+      <p>Processed Leuschner Telescope data and applied Keplerian orbit models to generate interpretable visualizations.</p>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section" id="skills">
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-label">Languages &amp; Tools</div>
+    <div class="skills-grid">
+      <div class="skill-item"><span class="skill-icon">🐍</span>Python</div>
+      <div class="skill-item"><span class="skill-icon">☕</span>Java</div>
+      <div class="skill-item"><span class="skill-icon">⚡</span>C / C++</div>
+      <div class="skill-item"><span class="skill-icon">🌐</span>JavaScript</div>
+      <div class="skill-item"><span class="skill-icon">🎨</span>HTML / CSS</div>
+      <div class="skill-item"><span class="skill-icon">🔧</span>Git</div>
+      <div class="skill-item"><span class="skill-icon">📊</span>NumPy / Pandas</div>
+      <div class="skill-item"><span class="skill-icon">🧠</span>ML / CV</div>
+      <div class="skill-item"><span class="skill-icon">🗄️</span>SQL</div>
+      <div class="skill-item"><span class="skill-icon">🔬</span>WebGL</div>
+    </div>
+    <div class="skills-label" style="margin-top:1.5rem;">Workflow</div>
+    <ul class="workflow-list">
+      <li>Accessible &amp; User-Centered Design</li>
+      <li>Rapid Prototyping &amp; Iteration</li>
+      <li>Debugging &amp; Performance Optimization</li>
+      <li>Collaborative Teamwork</li>
+      <li>Research-Driven Problem Solving</li>
+    </ul>
+  </section>
+
+  <!-- Outreach -->
+  <section class="section" id="outreach">
+    <h2 class="section-title">Outreach</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://uas.astro.berkeley.edu/" target="_blank" rel="noopener">Undergraduate Astronomy Society</a>
+        </div>
+        <div class="card-date">Jun 2023 – May 2025</div>
+      </div>
+      <div class="card-sub">President · Berkeley, CA</div>
+      <p>Increased community engagement by 400+ members; coordinated star parties, sidewalk astronomy, and career workshops with 100+ attendees.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <a href="https://asktutoring.org/" target="_blank" rel="noopener">ASK Tutoring</a>
+      </div>
+      <p>Volunteer-based nonprofit offering tutoring to underprivileged communities; supported weekly sessions for students and tutors.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <a href="https://projectdowntown.org/" target="_blank" rel="noopener">Project Downtown</a>
+      </div>
+      <p>Organized and participated in weekly food preparation and distribution for underserved communities.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- Moon Widget -->
+<div id="moon-widget">
+  <div id="moon-widget-inner">
+    <canvas id="widget-moon" width="22" height="22"></canvas>
+    <span id="widget-phase-name">—</span>
+  </div>
+  <div id="moon-widget-tooltip">
+    <div id="widget-tooltip-content"></div>
+  </div>
+</div>
+
+<script>
+// ── Moon phase math ────────────────────────────────────────────────────────────
+const SYNODIC = 29.53058867;
+const KNOWN_NEW_MOON_MS = new Date('2000-01-06T18:14:00Z').getTime();
+
+function getMoonPhase(date) {
+  const elapsed = (date.getTime() - KNOWN_NEW_MOON_MS) / 86400000;
+  const age = ((elapsed % SYNODIC) + SYNODIC) % SYNODIC;
+  const illumination = (1 - Math.cos(2 * Math.PI * age / SYNODIC)) / 2;
+  return { age, illumination };
+}
+
+function getPhaseName(age) {
+  const p = age / SYNODIC;
+  if (p < 0.025 || p >= 0.975) return 'New Moon';
+  if (p < 0.25)  return 'Waxing Crescent';
+  if (p < 0.275) return 'First Quarter';
+  if (p < 0.5)   return 'Waxing Gibbous';
+  if (p < 0.525) return 'Full Moon';
+  if (p < 0.75)  return 'Waning Gibbous';
+  if (p < 0.775) return 'Last Quarter';
+  return 'Waning Crescent';
+}
+
+const todayPhase = getMoonPhase(new Date());
+
+// ── Draw moon on canvas ────────────────────────────────────────────────────────
+// Algorithm:
+//   Waxing (p<0.5): right side lit. Crescent (p<0.25): dark ellipse on right.
+//                   Gibbous (p>0.25): lit ellipse added to left.
+//   Waning (p>0.5): left side lit.  Gibbous (p<0.75): lit ellipse added to right.
+//                   Crescent (p>0.75): dark ellipse on left.
+//   Ellipse x-radius = |cos(phi)| * r where phi = p*2π.
+function drawMoon(ctx, cx, cy, r, age, glow) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const p   = age / SYNODIC;
+  const phi = p * 2 * Math.PI;
+  const LIGHT = '#e8dfc4';
+  const DARK  = '#0d0d14';
+
+  // Dark background disc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.fillStyle = DARK;
+  ctx.fill();
+
+  // Clip helper: intersects the disc with left or right half-rectangle, then calls fn
+  function halfFill(side, color, shapeIsEllipse, xR) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.clip();                        // restrict to disc
+    ctx.beginPath();
+    if (side === 'right') ctx.rect(cx,         cy - r - 1, r + 2, 2 * r + 2);
+    else                  ctx.rect(cx - r - 2, cy - r - 1, r + 2, 2 * r + 2);
+    ctx.clip();                        // restrict to half
+    ctx.beginPath();
+    if (shapeIsEllipse) ctx.ellipse(cx, cy, xR, r, 0, 0, 2 * Math.PI);
+    else                ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  if (p >= 0.99 || p <= 0.01) {
+    // new moon — leave dark
+  } else if (p <= 0.5) {
+    // waxing — right half is the lit base
+    halfFill('right', LIGHT, false, 0);
+    if (p < 0.25) {
+      // crescent: dark ellipse trims the lit right half
+      const xR = Math.cos(phi) * r;  // cos(0→π/2) → 1→0, always > 0
+      if (xR > 0.5) halfFill('right', DARK, true, xR);
+    } else if (p > 0.25) {
+      // gibbous: lit ellipse expands into left half
+      const xR = -Math.cos(phi) * r; // cos(π/2→π) → 0→-1, so -cos > 0
+      if (xR > 0.5) halfFill('left', LIGHT, true, xR);
+    }
+  } else {
+    // waning — left half is the lit base
+    halfFill('left', LIGHT, false, 0);
+    if (p < 0.75) {
+      // gibbous: lit ellipse expands into right half
+      const xR = -Math.cos(phi) * r; // cos(π→3π/2) → -1→0, so -cos > 0
+      if (xR > 0.5) halfFill('right', LIGHT, true, xR);
+    } else if (p > 0.75) {
+      // crescent: dark ellipse trims the lit left half
+      const xR = Math.cos(phi) * r;  // cos(3π/2→2π) → 0→1, always > 0
+      if (xR > 0.5) halfFill('left', DARK, true, xR);
+    }
+  }
+
+  // Glow
+  if (glow) {
+    const illum = (1 - Math.cos(phi)) / 2;
+    if (illum > 0.08) {
+      const grad = ctx.createRadialGradient(cx, cy, r * 0.75, cx, cy, r * 1.7);
+      grad.addColorStop(0, `rgba(201,185,122,${0.14 * illum})`);
+      grad.addColorStop(1, 'rgba(201,185,122,0)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 1.7, 0, 2 * Math.PI);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+
+  // Rim
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(201,185,122,0.25)';
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+}
+
+// ── Nav moon with lerp ─────────────────────────────────────────────────────────
+const navCtx = document.getElementById('moon-canvas').getContext('2d');
+let displayAge = todayPhase.age;
+let targetAge  = todayPhase.age;
+let rafPending = false;
+
+function animNavMoon() {
+  const diff = targetAge - displayAge;
+  if (Math.abs(diff) < 0.02) { displayAge = targetAge; rafPending = false; }
+  else { displayAge += diff * 0.08; requestAnimationFrame(animNavMoon); }
+  drawMoon(navCtx, 32, 32, 28, displayAge, true);
+}
+
+function setNavAge(age) {
+  targetAge = age;
+  if (!rafPending) { rafPending = true; requestAnimationFrame(animNavMoon); }
+}
+
+drawMoon(navCtx, 32, 32, 28, todayPhase.age, true);
+
+// ── Phase dots ─────────────────────────────────────────────────────────────────
+(function() {
+  const wrap = document.getElementById('phase-dots');
+  for (let i = 0; i < 14; i++) {
+    const d = document.createElement('div');
+    d.className = 'phase-dot';
+    wrap.appendChild(d);
+  }
+})();
+
+// ── Moon widget ────────────────────────────────────────────────────────────────
+const wCtx = document.getElementById('widget-moon').getContext('2d');
+drawMoon(wCtx, 11, 11, 9, todayPhase.age, false);
+const pName = getPhaseName(todayPhase.age);
+document.getElementById('widget-phase-name').textContent = pName;
+document.getElementById('widget-tooltip-content').innerHTML =
+  '<strong>' + pName + '</strong><br>' +
+  'Illumination: ' + Math.round(todayPhase.illumination * 100) + '%<br>' +
+  'Age: ' + todayPhase.age.toFixed(1) + ' days';
+
+// ── Hero phase icon strip ──────────────────────────────────────────────────────
+(function() {
+  const phases = [
+    { label: 'Crescent',  age: SYNODIC * 0.125 },
+    { label: '1st Qtr',   age: SYNODIC * 0.25  },
+    { label: 'Gibbous',   age: SYNODIC * 0.375 },
+    { label: 'Full',      age: SYNODIC * 0.5   },
+    { label: 'Gibbous',   age: SYNODIC * 0.625 },
+    { label: '3rd Qtr',   age: SYNODIC * 0.75  },
+    { label: 'Crescent',  age: SYNODIC * 0.875 },
+  ];
+  const strip = document.getElementById('moon-phases-strip');
+  phases.forEach(ph => {
+    const wrap = document.createElement('div');
+    wrap.className = 'moon-phase-icon';
+    const c = document.createElement('canvas');
+    c.width = 38; c.height = 38;
+    drawMoon(c.getContext('2d'), 19, 19, 16, ph.age, false);
+    const lbl = document.createElement('span');
+    lbl.textContent = ph.label;
+    wrap.appendChild(c);
+    wrap.appendChild(lbl);
+    strip.appendChild(wrap);
+  });
+})();
+
+// ── Scroll → nav moon lerp ─────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const max = document.body.scrollHeight - window.innerHeight;
+  const ratio = max > 0 ? window.scrollY / max : 0;
+  setNavAge(ratio * SYNODIC);
+}, { passive: true });
+
+// ── Starfield ──────────────────────────────────────────────────────────────────
+const sf = document.getElementById('starfield');
+const sc = sf.getContext('2d');
+let stars = [];
+
+function resizeSf() { sf.width = window.innerWidth; sf.height = window.innerHeight; }
+
+function mkStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    const bright = Math.random() < 0.15; // 15% are bright flashers
+    stars.push({
+      x:      Math.random() * sf.width,
+      y:      Math.random() * sf.height,
+      r:      Math.random() * 1.2 + 0.3,
+      min:    bright ? 0.05 : 0.1,
+      max:    bright ? 1.0  : Math.random() * 0.5 + 0.4,
+      period: (Math.random() * 3 + 1) * 1000, // 1–4s — fast, visible twinkle
+      off:    Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function drawStars(t) {
+  sc.clearRect(0, 0, sf.width, sf.height);
+  stars.forEach(s => {
+    // Smooth 0→1→0 pulse using (1 - cos) / 2
+    const pulse = (1 - Math.cos((t / s.period) * Math.PI * 2 + s.off)) / 2;
+    const a = s.min + (s.max - s.min) * pulse;
+    const rr = s.r * (0.85 + 0.3 * pulse); // slight size pulse
+    sc.beginPath();
+    sc.arc(s.x, s.y, rr, 0, Math.PI * 2);
+    sc.fillStyle = 'rgba(232,223,196,' + a + ')';
+    sc.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resizeSf(); mkStars(); requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resizeSf(); mkStars(); });
+
+// ── Scroll fade-in ─────────────────────────────────────────────────────────────
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.section:not(#about)').forEach(s => fadeObs.observe(s));
+
+// ── Active nav ─────────────────────────────────────────────────────────────────
+const navLinks = document.querySelectorAll('#sidebar-nav .nav-link');
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector('#sidebar-nav a[href="#' + e.target.id + '"]');
+      if (a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('.section').forEach(s => navObs.observe(s));
+</script>
+
+</body>
 </html>
